@@ -33,19 +33,20 @@ In my code (`Cube_Env.py`), the `RubiksCube2x2` class represents the cube in two
 The environment supports resetting, scrambling, applying moves, checking if solved, and getting states. The compact state keeps the Q-table manageable for learning.
 
 ## Hybrid Agent
-My `RubikQLearningAgent` (in `Q_Agent.py`) combines Q-learning with A* search to solve the cube efficiently:
+
+My `RubikQLearningAgent` (in `Q_Agent.py`) combines Q-learning with A\* search to solve the cube efficiently:
 
 - **Q-Learning**: The Q-table (a `defaultdict`) maps compact states to 12 move values. I update it with:
-  \[
-  Q(s, a) \leftarrow Q(s, a) + \alpha \cdot \left[ r + \gamma \cdot \max_{a'} Q(s', a') - Q(s, a) \right]
-  \]
-  where \(\alpha = 0.2\) (learning rate), \(\gamma = 0.99\) (discount factor). Rewards are +10 (plus a bonus for fewer steps) for solving, -0.1 per step, +0.05 per solved face, and -1 for timeout.
 
-- **A* Search**: When a state isn’t in the Q-table (or during exploration with probability \(\epsilon\)), I use `batchedWeightedAStarSearch` (from `Search_Utils.py`) to find a path to solved. I only take the *first move* from A*’s path, so the agent learns from its own experience rather than relying on search. The heuristic counts misplaced and misoriented cubies for efficiency.
+  $$Q(s, a) \leftarrow Q(s, a) + \alpha \cdot \left[ r + \gamma \cdot \max_{a'} Q(s', a') - Q(s, a) \right]$$
+
+  where \$\alpha = 0.2\$ (learning rate), \$\gamma = 0.99\$ (discount factor). Rewards are +10 (plus a bonus for fewer steps) for solving, -0.1 per step, +0.05 per solved face, and -1 for timeout.
+
+- **A* Search*\*: When a state isn’t in the Q-table (or during exploration with probability \$\epsilon\$), I use `batchedWeightedAStarSearch` (from `Search_Utils.py`) to find a path to solved. I only take the *first move* from A\*’s path, so the agent learns from its own experience rather than relying on search. The heuristic counts misplaced and misoriented cubies for efficiency.
 
 - **Smaller State Space**: A* guidance means the Q-table doesn’t need all 3.7 million states. After 1M episodes, it holds 1,088,640 states—about 30% of the total.
 
-The agent balances exploration (random or A*-guided moves) and exploitation (best Q-value), with \(\epsilon\) decaying from 1.0 to 0.02.
+The agent balances exploration (random or A*-guided moves) and exploitation (best Q-value), with \($\epsilon$\) decaying from 1.0 to 0.02.
 
 ## Curriculum Learning
 To make learning smoother, I added a curriculum in the `train` method. The agent starts with 1-move scrambles and moves to 11-move scrambles when it hits a 70% solve rate for the current length. This was simple to implement—just a dictionary tracking solve rates—but it mirrors how humans learn: start easy, then tackle harder puzzles. The curriculum state is saved, so training can resume seamlessly.
