@@ -57,7 +57,7 @@ I included visualizations to show the agent’s progress and solutions, saved in
 - **Training Progress**: Plots rewards, steps, reward distribution, and state visits over episodes. Smoothed curves and log-scale histograms make trends clear, like how rewards climb as the agent learns.
   ![Training Progress](./training_progress.png)
 
-- **Q-Value Heatmap**: Shows Q-values for the top 40 states, selected by their max Q-value. Rows are states, columns are moves, and colors highlight which moves the agent prefers.
+- **Q-Value Heatmap**: Shows Q-values for the top 20 states, selected by their max Q-value. Rows are states, columns are moves, and colors highlight which moves the agent prefers.
   ![Q-Value Heatmap](./value_function_heatmap.png)
 
 - **Solution Visualization**: Displays the cube’s states (solved → scrambled → each solution step) in a 2D cross layout. Colors match the cube’s faces, with labels (U, F, etc.) for clarity.
